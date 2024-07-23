@@ -1,0 +1,30 @@
+[IMPORTANT]
+.Auth and other words
+====
+Kubewarden policies can be retrieved from the GitHub container registry at https://ghcr.io.
+You need authentication to use the repository with the Kubewarden CLI, a [GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) (PAT).
+
+
+```console
+echo $PAT | docker login ghcr.io --username <my-gh-username> --password-stdin
+```
+
+====
+
+
+Some other random text, should not get matched at all.
+
+[TIP]
+.about something
+====
+The tip
+====
+
+
+Next admonition should also be matched even though no title. But title should be blank and not the first line of text in the admonition
+
+[CAUTION]
+====
+Dire things
+will happen
+====
