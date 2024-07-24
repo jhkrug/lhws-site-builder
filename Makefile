@@ -1,5 +1,6 @@
 local:
 	mkdir -p tmp
+	npm install && npm update
 	npx antora --stacktrace --log-format=pretty lh-local-playbook.yml 2>&1 | tee tmp/local-build.log 2>&1
 
 netlify:

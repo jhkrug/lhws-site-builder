@@ -4,3 +4,16 @@ Site builder for Longhorn asciidoc.
 
 == Migration notes
 
+=== Images
+
+Need to move images from the LH repo to images diretory in the content repo. All
+the image includes then just need to be modified to delete the prefix `/img/`
+from the images resource path. That should be easy to automate.
+
+=== Warning: section title out of sequence: expected level 1, got level 2
+
+Lot's of these. Need to investigate why.
+
+=== ERROR (asciidoctor): invalid part, must have at least one section (e.g., chapter, appendix, etc.)
+
+Lots of these. Need to investigate why.
