@@ -6,9 +6,14 @@ Site builder for Longhorn asciidoc.
 
 === Images
 
-Need to move images from the LH repo to images diretory in the content repo. All
-the image includes then just need to be modified to delete the prefix `/img/`
-from the images resource path. That should be easy to automate.
+Need to move images from the LH repo to images directory in the content repo.
+All the image includes (those transformed from standard markdown inge includes)
+then just need to be modified to delete the prefix `/img/` from the images
+resource path. That should be easy to automate.
+
+In addition there are man instances of using the `{{< figure >}}` construct from
+Hugo. These need to be transformed to asciidoc as well. The work done for the
+Hugo to Docusaurus migration should be useful here.
 
 === Warning: section title out of sequence: expected level 1, got level 2
 
@@ -17,3 +22,17 @@ Lot's of these. Need to investigate why.
 === ERROR (asciidoctor): invalid part, must have at least one section (e.g., chapter, appendix, etc.)
 
 Lots of these. Need to investigate why.
+
+=== `{{< current-version}}` and others.
+
+Need a strategy for managing the current version. Antora supports versioned docs
+from the github repos so something should be possible. There are other templated
+constructs that need weeding out.
+
+=== Versioned docs
+
+Longhorn has a big set of versions and archived docs that they appear to want to maintain. THis needs a strategy.
+
+== Blogs and KB
+
+No attempt yet to migrate these. Need to investigate how to do this.
