@@ -25,7 +25,7 @@ Lots of these. Need to investigate why.
 
 === `{{< current-version}}` and others.
 
-Need a strategy for managing the current version. Antora supports versioned docs
+Need a strategy for managing the `current version` Antora supports versioned docs
 from the github repos so something should be possible. There are other templated
 constructs that need weeding out.
 
