@@ -1,7 +1,7 @@
 site:
   title: Longhorn documentation
   url: /
-  start_page: main@longhorn-ws-ad::_index.adoc
+  start_page: main@longhorn-ws-ad::index.adoc
 
 content:
   sources:
