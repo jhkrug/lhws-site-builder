@@ -6,7 +6,7 @@ site:
 content:
   sources:
     - url: ../longhorn-ws-ad
-      branches: [main]
+      branches: [main, 1.2.3]
 
 ui:
   bundle:
@@ -17,4 +17,3 @@ ui:
 asciidoc:
   extensions:
     - asciidoctor-kroki
-

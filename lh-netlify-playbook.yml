@@ -6,14 +6,13 @@ site:
 content:
   sources:
     - url: https://github.com/jhkrug/longhorn-ws-ad.git
-      branches: [main]
+      branches: [main, 1.2.3]
 
 ui:
   bundle:
     url: https://github.com/uyuni-project/uyuni-docs/blob/master/branding/default-ui/suma/ui-bundle.zip?raw=true
     snapshot: true
   supplemental_files: ./susecom-2023
-
 
 asciidoc:
   extensions:
