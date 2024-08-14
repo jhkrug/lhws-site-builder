@@ -1,6 +1,7 @@
 build*/
 tmp/
 node_modules/
+style/
 
 # Local Netlify folder
 .netlify

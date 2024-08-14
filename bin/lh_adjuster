@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Improve the adoc file provided as $1
+
+fn="$1"
+
+# Add subs="+attributes" to code blocks
+perl -i -pe 's/^\[,(?<lang>(bash|json|log|python|shell|text|yaml))\]$/[subs="+attributes",$+{lang}]/gm' "$fn"
+
+# Add attributes to the doc header for git-branch and current-version
+# So,
+# :current-version: {page-origin-branch}
+
+# Change all {{< current-version >}} to {current-version}
+
+# replace link:../../ with link:../ in Hugo the content tree was different
+
+perl -i -pe 's/link:..\//xref:/g' "$fn"
+perl -i -pe 's/link:..\/..\//xref:..\//g' "$fn"
+
+# Now all the links need to be absolute links from the root
+
+ python /home/jhk/projects/suse/longhorn-admig/lhws-site-builder/bin/longhorn.py "$fn"

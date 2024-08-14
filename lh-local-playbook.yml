@@ -10,9 +10,11 @@ content:
 
 ui:
   bundle:
-    url: https://github.com/uyuni-project/uyuni-docs/blob/master/branding/default-ui/suma/ui-bundle.zip?raw=true
+    url: /home/jhk/projects/suse/longhorn-admig/lhws-site-builder/style/uix.zip
+    #url: /home/jhk/projects/suse/longhorn-admig/lhws-site-builder/tmp/ui-bundle.zip
+    #url: https://github.com/uyuni-project/uyuni-docs/blob/master/branding/default-ui/suma/ui-bundle.zip?raw=true
     snapshot: true
-  supplemental_files: ./susecom-2023
+  #supplemental_files: ./susecom-2023
 
 asciidoc:
   extensions:
