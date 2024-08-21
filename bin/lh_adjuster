@@ -4,20 +4,32 @@
 
 fn="$1"
 
+# Fix HTML line breaks
+sed -i 's/<br>/<br\/>/g' "$fn"
+# Next two get rid of some isolated < signs being picked up as start of HTML tag.
+sed -i 's/< {{< current-version >}}/\&lt; {{< current-version >}}/g' "$fn"
+sed -i 's/< v{{< current-version >}}/\&lt; v{{< current-version >}}/g' "$fn"
+# And change the format of the current-version variable
+sed -i 's/{{< current-version >}}/{current-version}/g' "$fn"
+
+# Next 2 get rid of more unwanted '<' and '>'
+sed -i 's/<=/≤/g' "$fn"
+sed -i 's/>=/≥/g' "$fn"
+
 # Add subs="+attributes" to code blocks
-perl -i -pe 's/^\[,(?<lang>(bash|json|log|python|shell|text|yaml))\]$/[subs="+attributes",$+{lang}]/gm' "$fn"
+perl -i -pe 's/^\[,(?<lang>(console|ruby|rust|bash|json|log|python|shell|text|yaml))\]$/[subs="+attributes",$+{lang}]/gm' "$fn"
 
 # Add attributes to the doc header for git-branch and current-version
 # So,
 # :current-version: {page-origin-branch}
 
-# Change all {{< current-version >}} to {current-version}
-
 # replace link:../../ with link:../ in Hugo the content tree was different
 
-perl -i -pe 's/link:..\//xref:/g' "$fn"
-perl -i -pe 's/link:..\/..\//xref:..\//g' "$fn"
+perl -i -pe 's/link:..\//xref_to_replace:/g' "$fn"
+perl -i -pe 's/link:..\/..\//xref_to_replace:..\//g' "$fn"
+perl -i -pe 's/link:..\/..\/..\//xref_to_replace:..\/..\//g' "$fn"
 
 # Now all the links need to be absolute links from the root
+# And fix the Hugo figure macros
 
- python /home/jhk/projects/suse/longhorn-admig/lhws-site-builder/bin/longhorn.py "$fn"
+python /home/jhk/projects/suse/longhorn-admig/lhws-site-builder/bin/longhorn.py "$fn"
