@@ -1,0 +1,12 @@
+#!/bin/bash
+
+d=$(dirname $1)
+f=$(basename $1)
+
+if [[ "$f" != "_index.adoc" ]]; then
+  echo "File is not an _index.adoc file"
+  exit 1
+fi
+
+echo "Moving $1 to $d/index.adoc"
+mv $1 $d/index.adoc

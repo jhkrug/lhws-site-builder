@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# Make sure ./docs and ./tmp is in .gitignore
+
+bin_dir="/home/jhk/projects/suse/longhorn-admig/lhws-site-builder/bin"
+docs_src_dir="/home/jhk/projects/suse/longhorn-website-testsrc/content/docs"
+docs_tgt_dir="."
+ad_tgt_dir="./modules/ROOT/pages/"
+
+#ver_list="1.8.0 1.7.1 1.7.0 1.6.3 1.6.2 1.6.1 1.5.6 1.5.5"
+ver_list="1.8.0 1.7.1 1.7.0"
+
+
+for v in $ver_list
+do
+  echo "Processing version/branch $v"
+
+  # Branch setup
+  git switch -c "$v" || exit 1
+  mkdir -p \
+    ./modules/ROOT/pages \
+    ./modules/ROOT/attachments \
+    ./modules/ROOT/examples \
+    ./modules/ROOT/images \
+    ./modules/ROOT/pages \
+    ./modules/ROOT/partials \
+
+  # Need an antora.yml per branch
+  cat > ./antora.yml << EOF
+name: longhorn-product-docs
+title: Longhorn documentation
+version: $v
+display_version: $v
+start_page: ROOT:index.adoc
+nav:
+- modules/ROOT/nav.adoc
+EOF
+
+  # A nav file
+  cp navs/nav.adoc modules/ROOT/nav.adoc
+
+  # Copy the static content images into the asciidoc hierarchy
+  cp -pr $docs_src_dir/../../static/img/* modules/ROOT/images
+
+  # Copy the version markdown to the local docs directory
+  mkdir -p "$docs_tgt_dir/docs"
+  cp -pr $docs_src_dir/$v/* "$docs_tgt_dir/docs"
+
+  # run Guna's markdown converter
+  mkdir -p tmp
+  docker run -v "$(pwd)":/workspace/ matamagu/asciidoc-converter:latest \
+    > tmp/adc_"$v".log 2>&1
+
+  # copy the asciidoc into the asciidoc hierarchy
+  cp -pr $docs_tgt_dir/kramdown_md_to_asciidoc/docs/* "$ad_tgt_dir"
+
+  # LH specific conversion
+  find modules/ROOT/pages -type f -name "_index.adoc" -exec $bin_dir/mvf {} \;
+  find modules/ROOT/pages -type f -name "*.adoc" -exec $bin_dir/lh_adjuster {} \;
+
+  # Cleanup & Commit
+  rm -rf "$docs_tgt_dir/docs" kramdown_md_to_asciidoc
+  git add .
+  git commit -s -m "$v docs ingest from markdown"
+
+
+  # Finish
+  git switch main || exit 1
+  rm -rf modules
+
+done

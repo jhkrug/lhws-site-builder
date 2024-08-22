@@ -21,7 +21,7 @@ import sys
 import re
 import os
 
-debug = True
+debug = False
 
 
 def dprint(*args, **kwargs):
@@ -31,7 +31,6 @@ def dprint(*args, **kwargs):
 
 def ad_ify_link(fn, ad):
     link_text_re = r'xref_to_replace:(?P<xr>.*?)(?:\s|\[)'
-    # matches = re.finditer(link_text_re, ad)
 
     while True:
         # This is necessary as after every match and replace the
@@ -41,52 +40,55 @@ def ad_ify_link(fn, ad):
         if match is None:
             return ad
         full_link = match.group('xr')
-        if full_link[0] == '#':
-            continue
         match_start = match.start()
         match_end = match.end() - 1
         dprint(f"Match starts and ends at {match_start} and {match_end}")
 
-        # Check for anchor
-        anchor_re = r'(?P<anc>#.*)'
-        anc_match = re.search(anchor_re, full_link)
-        if anc_match:
-            anchor = anc_match.group('anc')
-        else:
-            anchor = ''
-
-        # Remove the anchor from the full link text
-        full_link = re.sub(anchor, '', full_link)
-
-        # If full_link is '' then we are working on an anchor to an
-        # index.adoc in the current directory
-        if full_link == '':
-            full_link = './index.adoc' + anchor
-        else:
-            full_path = os.path.realpath(full_link)
-            dprint(f"full_path: {full_path}")
-            # Is this really a Longhorn index file?
-            test_path = full_path + '/index.adoc'
-            if os.path.isfile(test_path):
-                full_path = test_path
+        # If the link starts with a # then it's an anchor in the current page
+        # Just leave it alone.
+        if full_link[0] != '#':
+            # Check for anchor
+            anchor_re = r'(?P<anc>#.*)'
+            anc_match = re.search(anchor_re, full_link)
+            if anc_match:
+                anchor = anc_match.group('anc')
             else:
-                # Check to see if '.adoc' is already there so repeated runs
-                # and manual fixes don't keep getting multiple '.adoc's
-                # added.
-                if re.search(r'\.adoc$ ', full_path) is not None:
-                    continue
+                anchor = ''
+
+            # Remove the anchor from the full link text
+            full_link = re.sub(anchor, '', full_link)
+
+            # If full_link is '' then we are working on an anchor to an
+            # index.adoc in the current directory
+            if full_link == '':
+                full_link = './index.adoc' + anchor
+            else:
+                full_path = os.path.realpath(full_link)
+                dprint(f"full_path: {full_path}")
+                # Is this really a Longhorn index file?
+                test_path = full_path + '/index.adoc'
+                if os.path.isfile(test_path):
+                    full_path = test_path
                 else:
-                    full_path = full_path + '.adoc'
-                    dprint(f"full_path: {full_path}")
+                    # Check to see if '.adoc' is already there so repeated runs
+                    # and manual fixes don't keep getting multiple '.adoc's
+                    # added.
+                    if re.search(r'\.adoc$ ', full_path) is not None:
+                        continue
+                    else:
+                        full_path = full_path + '.adoc'
+                        dprint(f"full_path: {full_path}")
 
-            full_link = full_path + anchor
-            dprint(f"full_link: {full_link}")
+                # Add the anchor back
+                full_link = full_path + anchor
+                dprint(f"full_link: {full_link}")
 
-        # Normalize to doc root by removing '^.*/modules/.*/pages/'
-        # from full_link
-        full_link = re.sub(
-            r'^.*/modules/.*/pages/', '', full_link)
-        dprint(f"Normalized full_link: {full_link}")
+            # Normalize to doc root by removing '^.*/modules/.*/pages/'
+            # from full_link
+            full_link = re.sub(
+                r'^.*/modules/.*/pages/', '', full_link)
+            dprint(f"Normalized full_link: {full_link}")
+
         full_link = 'xref:' + full_link
 
         # Finally replace the original link with the new one
@@ -118,7 +120,7 @@ def main():
         ad_in = f.read()
         f.close()
 
-    # Need to be in the adoc files directory to text links
+    # Need to be in the adoc files directory to resolve relative links
     this_dir = os.getcwd()
     try:
         dprint(f"ad_file: {ad_file}")

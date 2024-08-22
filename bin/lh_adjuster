@@ -4,6 +4,13 @@
 
 fn="$1"
 
+if [[ ! -f "$fn" ]]; then
+    echo "File not found: $fn"
+    exit 1
+fi
+
+echo "Adjusting $fn"
+
 # Fix HTML line breaks
 sed -i 's/<br>/<br\/>/g' "$fn"
 # Next two get rid of some isolated < signs being picked up as start of HTML tag.
@@ -16,12 +23,19 @@ sed -i 's/{{< current-version >}}/{current-version}/g' "$fn"
 sed -i 's/<=/≤/g' "$fn"
 sed -i 's/>=/≥/g' "$fn"
 
+# Fix image directives
+sed -i 's/image::\/img\//image::/g' "$fn"
+
 # Add subs="+attributes" to code blocks
 perl -i -pe 's/^\[,(?<lang>(console|ruby|rust|bash|json|log|python|shell|text|yaml))\]$/[subs="+attributes",$+{lang}]/gm' "$fn"
 
 # Add attributes to the doc header for git-branch and current-version
 # So,
 # :current-version: {page-origin-branch}
+cur_ver=":current-version: {page-origin-branch}"
+if [[ $(grep -c "^$cur_ver" "$fn") -eq 0 ]]; then
+    sed -i "0,/^$/s//$cur_ver\n/" "$fn"
+fi
 
 # replace link:../../ with link:../ in Hugo the content tree was different
 
