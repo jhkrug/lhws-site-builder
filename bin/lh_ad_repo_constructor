@@ -7,8 +7,8 @@ docs_src_dir="/home/jhk/projects/suse/longhorn-website-testsrc/content/docs"
 docs_tgt_dir="."
 ad_tgt_dir="./modules/ROOT/pages/"
 
-#ver_list="1.8.0 1.7.1 1.7.0 1.6.3 1.6.2 1.6.1 1.5.6 1.5.5"
-ver_list="1.8.0 1.7.1 1.7.0"
+ver_list="1.8.0 1.7.1 1.7.0 1.6.3 1.6.2 1.6.1 1.6.0 1.5.6 1.5.5"
+#ver_list="1.8.0 1.7.1 1.7.0"
 
 
 for v in $ver_list
